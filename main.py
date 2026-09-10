@@ -440,7 +440,7 @@ def web_app(ml):
 
 
 async def main():
-    names = ['ML_CLIENT_ID', 'ML_CLIENT_SECRET', 'ML_REDIRECT_URI', 'DISCORD_TOKEN', 'DISCORD_CHANNEL_ID', 'DISCORD_OWNER_ID']
+    names = ['ML_CLIENT_ID', 'ML_CLIENT_SECRET', 'ML_REDIRECT_URI', 'DISCORD_TOKEN', 'DISCORD_CHANNEL_ID']
     missing = [name for name in names if not os.environ.get(name)]
     if missing:
         raise SafeError('Variáveis ausentes: ' + ', '.join(missing))
@@ -451,7 +451,7 @@ async def main():
     store = Store(folder)
     async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=45)) as session:
         ml = MercadoLivre(session, store, cfg['ML_CLIENT_ID'], cfg['ML_CLIENT_SECRET'], cfg['ML_REDIRECT_URI'])
-        bot = Bot(ml, store, int(cfg['DISCORD_OWNER_ID']), int(cfg['DISCORD_CHANNEL_ID']))
+        bot = Bot(ml, store, int(cfg['DISCORD_CHANNEL_ID']))
         runner = web.AppRunner(web_app(ml), access_log=None)  # Não registrar códigos OAuth nas URLs.
         await runner.setup()
         await web.TCPSite(runner, '0.0.0.0', int(os.getenv('PORT', '8080'))).start()
